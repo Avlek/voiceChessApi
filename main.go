@@ -54,7 +54,7 @@ func Web(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if p.ByName("method") == "getmoves" {
-		moves, err := db.GetMoves("test")
+		moves, err := api.GetMovesResponse("test")
 		if err != nil {
 			fmt.Fprint(w, err.Error())
 		} else {

@@ -6,7 +6,7 @@ import (
 )
 
 func GetMovesResponse(game string) (string, error) {
-	moves, err := db.GetMoves("test")
+	moves, err := db.GetMoves(game)
 	if err != nil {
 		return "", err
 	}

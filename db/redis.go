@@ -3,7 +3,6 @@ package db
 import (
 	"encoding/json"
 	"github.com/Avlek/voiceChessApi/models"
-	"time"
 )
 import "github.com/go-redis/redis"
 
@@ -21,7 +20,7 @@ var preparedMoves = []models.MoveObject{
 func InitRedis() {
 	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
-		Password: "root",
+		Password: "",
 	})
 
 	InitPreparedMoves("test")
@@ -41,7 +40,7 @@ func getMoveKey(game string) string {
 func SaveMove(game string, m models.MoveObject) error {
 	b, _ := json.Marshal(m)
 
-	err := client.Set(getMoveKey(game), b, time.Hour).Err()
+	err := client.RPush(getMoveKey(game), b).Err()
 	if err != nil {
 		return err
 	}
@@ -49,10 +48,17 @@ func SaveMove(game string, m models.MoveObject) error {
 }
 
 func GetMoves(game string) (moves models.MoveObjects, err error) {
-	content, err := client.Get(getMoveKey(game)).Bytes()
+	rows, err := client.LRange(getMoveKey(game), 0, -1).Result()
 	if err != nil {
 		return moves, err
 	}
-	err = json.Unmarshal(content, &moves)
-	return moves, err
+
+	ms := []models.MoveObject{}
+	for _, val := range rows {
+		var m = models.MoveObject{}
+		err = json.Unmarshal([]byte(val), &m)
+		ms = append(ms, m)
+	}
+
+	return ms, err
 }
