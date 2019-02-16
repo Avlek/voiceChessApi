@@ -8,29 +8,13 @@ import "github.com/go-redis/redis"
 
 var client *redis.Client
 
-var preparedMoves = []models.MoveObject{
-	models.MoveObject{Player: "w", Move: "e2e4"},
-	models.MoveObject{Player: "b", Move: "e7e5"},
-	models.MoveObject{Player: "w", Move: "g1f3"},
-	models.MoveObject{Player: "b", Move: "b8c6"},
-	models.MoveObject{Player: "w", Move: "f1c4"},
-	models.MoveObject{Player: "b", Move: "d8e7"},
-}
-
 func InitRedis() {
 	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
 	})
 
-	InitPreparedMoves("test")
-}
-
-func InitPreparedMoves(game string) {
-
-	for _, value := range preparedMoves {
-		SaveMove(game, value)
-	}
+	client.FlushAll()
 }
 
 func getMoveKey(game string) string {

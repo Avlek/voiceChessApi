@@ -1,7 +1,7 @@
 package models
 
 type MoveObject struct {
-	Player Color  `json:"player"`
+	Player uint8  `json:"user"`
 	Move   string `json:"move"`
 }
 

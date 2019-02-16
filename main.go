@@ -24,9 +24,14 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func Api(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	p := models.Color(r.Header.Get("user")[0])
+	p := r.Header.Get("user")
+	var ap uint8
 
-	if p == "" {
+	if p == "white" {
+		ap = 0
+	} else if p == "black" {
+		ap = 1
+	} else {
 		fmt.Fprint(w, errors.New("Игрок не найден"))
 		return
 	}
@@ -40,12 +45,12 @@ func Api(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			return
 		}
 
-		m.Player = p
-		err = api.Move(m)
+		m.Player = ap
+		status, err := api.Move(m)
 		if err != nil {
 			fmt.Fprint(w, err.Error())
 		} else {
-			fmt.Fprint(w, fmt.Sprintf("Ваш ход %s", m.Move))
+			fmt.Fprint(w, fmt.Sprintf(status))
 		}
 	}
 }
@@ -68,6 +73,8 @@ func Web(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func main() {
 
 	db.InitRedis()
+
+	api.StartGame()
 
 	router := httprouter.New()
 	router.GET("/", Index)
