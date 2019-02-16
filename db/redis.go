@@ -62,3 +62,7 @@ func GetMoves(game string) (moves models.MoveObjects, err error) {
 
 	return ms, err
 }
+
+func DeleteTestMoves() {
+	client.FlushAll()
+}

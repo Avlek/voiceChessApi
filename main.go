@@ -60,6 +60,8 @@ func Web(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		} else {
 			fmt.Fprint(w, moves)
 		}
+	} else if p.ByName("method") == "flushall" {
+		db.DeleteTestMoves()
 	}
 }
 
