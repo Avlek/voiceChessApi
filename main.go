@@ -12,8 +12,6 @@ import (
 	"net/http"
 )
 
-var moves = []string{}
-
 type ErrStruct struct {
 	Error string `json:"error"`
 }
@@ -38,15 +36,14 @@ func Api(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if ps.ByName("method") == "move" {
 		decoderBody := json.NewDecoder(r.Body)
-		var m models.MoveObject
+		var m models.ClientMoveObject
 		err := decoderBody.Decode(&m)
 		if err != nil {
 			fmt.Fprint(w, err.Error())
 			return
 		}
 
-		m.Player = ap
-		status, err := api.Move(m)
+		status, err := api.Move(ap, m)
 		if err != nil {
 			fmt.Fprint(w, err.Error())
 		} else {

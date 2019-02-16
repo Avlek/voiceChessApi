@@ -15,9 +15,9 @@ func StartGame() {
 
 }
 
-func validateMove(m models.MoveObject) (string, error) {
+func validateMove(p uint8, m models.ClientMoveObject) (string, error) {
 
-	if m.Player != uint8(g.ActiveColor()) {
+	if p != uint8(g.ActiveColor()) {
 		return "", errors.New("Сейчас не ваш ход")
 	}
 

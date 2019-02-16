@@ -21,7 +21,7 @@ func getMoveKey(game string) string {
 	return "game_" + game
 }
 
-func SaveMove(game string, m models.MoveObject) error {
+func SaveMove(game string, m models.WebMoveObject) error {
 	b, _ := json.Marshal(m)
 
 	err := client.RPush(getMoveKey(game), b).Err()
@@ -37,9 +37,9 @@ func GetMoves(game string) (moves models.MoveObjects, err error) {
 		return moves, err
 	}
 
-	ms := []models.MoveObject{}
+	ms := []models.WebMoveObject{}
 	for _, val := range rows {
-		var m = models.MoveObject{}
+		var m = models.WebMoveObject{}
 		err = json.Unmarshal([]byte(val), &m)
 		ms = append(ms, m)
 	}

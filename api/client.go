@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func Move(m models.MoveObject) (string, error) {
+func Move(p uint8, m models.ClientMoveObject) (string, error) {
 
 	m.Move = strings.Replace(m.Move, " ", "", -1)
 
@@ -20,12 +20,19 @@ func Move(m models.MoveObject) (string, error) {
 		return "", errors.New("Некорректные данные")
 	}
 
-	status, err := validateMove(m)
+	status, err := validateMove(p, m)
 
 	if err != nil {
 		return "", err
 	}
-	db.SaveMove("test", m)
+
+	wm := models.WebMoveObject{
+		Player: p,
+		Move:   m.Move,
+		Status: status,
+	}
+
+	db.SaveMove("test", wm)
 
 	return status, nil
 }
