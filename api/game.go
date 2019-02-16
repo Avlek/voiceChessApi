@@ -29,5 +29,30 @@ func validateMove(p uint8, m models.ClientMoveObject) (string, error) {
 		return "", errors.New("Невозможный ход")
 	}
 
-	return status.String(), nil
+	var statusText string
+
+	if p == 0 {
+		statusText = "Белый "
+	} else {
+		statusText = "Черный "
+	}
+
+	switch status.String() {
+	case "In progress":
+		statusText += "сходил " + s.Source.String() + " " + s.Destination.String()
+	case "Black checkmated Black":
+		fallthrough
+	case "White checkmated White":
+		statusText += "получил мат"
+	case "Threefold":
+		fallthrough
+	case "Fifty move rule":
+		fallthrough
+	case "Stalemate":
+		fallthrough
+	case "Insufficient material":
+		statusText = "Ничья"
+	}
+
+	return statusText, nil
 }

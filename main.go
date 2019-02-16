@@ -48,7 +48,6 @@ func Api(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err != nil {
 			fmt.Fprint(w, err.Error())
 		} else {
-			fmt.Fprint(w, fmt.Sprintf(status))
 			if status == "White checkmated Black" || status == "Black checkmated White" || status == "Draw" {
 				time.Sleep(3 * time.Second)
 				db.DeleteTestMoves()
